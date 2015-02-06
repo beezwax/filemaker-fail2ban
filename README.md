@@ -7,6 +7,6 @@ To install the fail2ban core files, you can use the source at fail2ban.org, or a
 
 REFERENCE
 
-For fail2ban documentatation, see http://www.fail2ban.org.
+For fail2ban documentation, see http://www.fail2ban.org.
 
 Our blog post http://blog.beezwax.net/2013/05/06/fail2ban-with-filemaker-server/ provides some background on the initial implementation.
