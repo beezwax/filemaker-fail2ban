@@ -1,5 +1,5 @@
 # filemaker-fail2ban
-=== Fail2ban rules for FileMaker Server ===
+### Fail2ban rules for FileMaker Server
 
 These files files can be added to a fail2ban installment so that the relevant FileMaker Server logs will be included.
 
@@ -31,7 +31,7 @@ logpath  = /Library/FileMaker Server/Logs/Event.log
 maxretry = 6
 ```
 
-REFERENCE
+### Reference
 
 For fail2ban documentation, see http://www.fail2ban.org.
 
