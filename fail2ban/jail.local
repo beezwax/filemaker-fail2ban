@@ -37,14 +37,16 @@ action   = pf[name=screensharing, port=vnc]
 maxretry = 4
 
 
-# We can't describe the exact log file name, so we just
-# give a pattern and let fail2ban figure it out by which
+# We can't describe the exact log file name to fail2ban, so we
+# instead give a pattern and let fail2ban figure it out by which
 # files are getting updated. The problem with this
 # approach, by itself, is that fail2ban won't detect any
-# log files that are subsequently created.
+# log files that are subsequently created. It would be
+# better to change how FMS creates the Apache logs so that
+# there is a fixed filename for the current version of each.
 #
 # Giving multiple log files in logpath would generate errors. Because there is
-# a space in the path? So instead, created separate entries for each log file.
+# a space in the path? So instead, we are creating separate entries for each log file.
 
 [apache-badbots-1]
 
@@ -108,16 +110,3 @@ action   = pf[name=apache-noscript, port="http,https,16000"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 filter   = apache-noscript
 logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log.*
-
-
-# To log wrong MySQL access attempts add to /etc/my.cnf:
-# log-error=/var/log/mysqld.log
-# log-warning = 2
-[mysqld]
-
-enabled  = true 
-action   = pf[name=mysql, port="mysql,http,https"]
-           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
-filter   = mysqld-auth
-logpath  = /opt/local/var/log/mariadb-10.0/*
-maxretry = 5
