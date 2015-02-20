@@ -1,0 +1,123 @@
+# jail.local
+#
+# This is an example of what your jail.local file might look like.
+
+# THESE VALUES SHOULD BE DEFINED HERE OR IN JAIL.CONF:
+#    hostname: the network host name to use
+#    destemail: email address to send notification emails to
+
+
+[filemaker-client]
+
+enabled  = true
+filter   = filemaker-client
+logpath  = /Library/FileMaker Server/Logs/Event.log
+action   = pf[name=filemaker-client, port="5003,16001,http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s, logpath=%(logpath)s]
+maxretry = 6
+
+
+[ssh]
+
+enabled  = true
+filter   = sshd
+logpath  = /var/log/system.log
+action   = pf[name=ssh, port="ssh,http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s, logpath=%(logpath)s]
+maxretry = 6
+
+
+[screensharing]
+
+enabled  = true
+filter   = screensharingd
+logpath  = /var/log/system.log
+action   = pf[name=screensharing, port=vnc]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s, logpath=%(logpath)s]
+maxretry = 4
+
+
+# We can't describe the exact log file name, so we just
+# give a pattern and let fail2ban figure it out by which
+# files are getting updated. The problem with this
+# approach, by itself, is that fail2ban won't detect any
+# log files that are subsequently created.
+#
+# Giving multiple log files in logpath would generate errors. Because there is
+# a space in the path? So instead, created separate entries for each log file.
+
+[apache-badbots-1]
+
+enabled  = true
+filter   = apache-badbots
+logpath  = /Library/FileMaker Server/HTTPServer/logs/access_log.*
+action   = pf[name=apache-badbots, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 2
+
+[apache-badbots-2]
+
+enabled  = true
+filter   = apache-badbots
+logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_access_log.*
+action   = pf[name=apache-badbots, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 2
+
+[apache-badbots-3]
+
+enabled  = true
+filter   = apache-badbots
+logpath  = /Library/FileMaker Server/HTTPServer/logs/fmsadminserver_access_log.*
+action   = pf[name=apache-badbots, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 2
+
+
+[apache-auth-1]
+
+enabled  = true
+filter   = apache-auth
+logpath  = /Library/FileMaker Server/HTTPServer/logs/error_log.*
+action   = pf[name=apache-auth, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 4
+
+[apache-auth-2]
+
+enabled  = true
+filter   = apache-auth
+logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log.*
+action   = pf[name=apache-auth, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 4
+
+
+[apache-noscript-1]
+
+enabled  = true
+action   = pf[name=apache-noscript, port="http,https,16000"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+filter   = apache-noscript
+logpath  = /Library/FileMaker Server/HTTPServer/logs/error_log.*
+
+[apache-noscript-2]
+
+enabled  = true
+action   = pf[name=apache-noscript, port="http,https,16000"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+filter   = apache-noscript
+logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log.*
+
+
+# To log wrong MySQL access attempts add to /etc/my.cnf:
+# log-error=/var/log/mysqld.log
+# log-warning = 2
+[mysqld]
+
+enabled  = true 
+action   = pf[name=mysql, port="mysql,http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+filter   = mysqld-auth
+logpath  = /opt/local/var/log/mariadb-10.0/*
+maxretry = 5
