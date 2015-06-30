@@ -32,6 +32,12 @@ logpath  = /Library/FileMaker Server/Logs/Event.log
 maxretry = 6
 ```
 
+The following must be added to your /etc/pf.conf file to enable the fail2ban's ability to block addresses:
+```
+table <fail2ban> persist
+block drop log quick from <fail2ban> to any
+```
+
 #### Yosemite Configuration
 
 If using 10.10, we can make an additional improvement. This however requires making a change to how FileMaker Server writes out the web server logs. Follow the directions at https://blog.beezwax.net/2015/06/30/keep-filemaker-server-web-logs-at-fixed-paths/ for details.
