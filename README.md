@@ -32,6 +32,81 @@ logpath  = /Library/FileMaker Server/Logs/Event.log
 maxretry = 6
 ```
 
+#### Yosemite Configuration
+
+If using 10.10, we can make an additional improvement. This however requires making a change to how FileMaker Server writes out the web server logs. Follow the directions at https://blog.beezwax.net/2015/06/30/keep-filemaker-server-web-logs-at-fixed-paths/ for details.
+
+Once done, add the following to your jail.local file:
+
+```
+# Giving multiple log files in logpath would generate errors. Because there is
+# a space in the path? So instead, we are creating separate entries for each log file.
+
+[apache-badbots-1]
+
+enabled  = true
+filter   = apache-badbots
+logpath  = /Library/FileMaker Server/HTTPServer/logs/access_log
+action   = pf[name=apache-badbots, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 2
+
+[apache-badbots-2]
+
+enabled  = true
+filter   = apache-badbots
+logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_access_log
+action   = pf[name=apache-badbots, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 2
+
+[apache-badbots-3]
+
+enabled  = true
+filter   = apache-badbots
+logpath  = /Library/FileMaker Server/HTTPServer/logs/fmsadminserver_access_log
+action   = pf[name=apache-badbots, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 2
+
+
+[apache-auth-1]
+
+enabled  = true
+filter   = apache-auth
+logpath  = /Library/FileMaker Server/HTTPServer/logs/error_log
+action   = pf[name=apache-auth, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 4
+
+[apache-auth-2]
+
+enabled  = true
+filter   = apache-auth
+logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log
+action   = pf[name=apache-auth, port="http,https"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+maxretry = 4
+
+
+[apache-noscript-1]
+
+enabled  = true
+action   = pf[name=apache-noscript, port="http,https,16000"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+filter   = apache-noscript
+logpath  = /Library/FileMaker Server/HTTPServer/logs/error_log
+
+[apache-noscript-2]
+
+enabled  = true
+action   = pf[name=apache-noscript, port="http,https,16000"]
+           sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
+filter   = apache-noscript
+logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log
+```
+
+
 #### Reference
 
 For fail2ban documentation, see http://www.fail2ban.org.
