@@ -5,6 +5,20 @@ These files files can be added to a fail2ban installment so that the relevant Fi
 
 To install the fail2ban core files, you can use the source at fail2ban.org, or a Mac OS package manager like MacPorts or Homebrew.
 
+#### Installation
+
+For MacPorts, the install looks like this:
+
+`sudo port install fail2ban`
+
+To install from  source, the process is along these lines:
+
+* open the Terminal
+* fetch source (currently 0.9.3): `curl -O https://codeload.github.com/fail2ban/fail2ban/zip/master`
+* unzip the archive: `tar xf master`
+* `cd fail2ban-master`
+* run the installer script: `sudo python setup.py install
+
 #### Configuration
 
 To enable the filter, you'll need to add something like the following into your jail.local file (which you may need to create):
@@ -37,6 +51,10 @@ The following must be added to your /etc/pf.conf file to enable the fail2ban's a
 table <fail2ban> persist
 block drop log quick from <fail2ban> to any
 ```
+
+If not already enabled (likely), you'll need to enable PF to start filtering connections:
+
+`pfctl -e`
 
 #### Yosemite Configuration
 
