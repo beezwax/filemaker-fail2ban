@@ -17,7 +17,7 @@ To install from  source, the process is along these lines:
 * fetch source (currently 0.9.3): `curl -O https://codeload.github.com/fail2ban/fail2ban/zip/master`
 * unzip the archive: `tar xf master`
 * `cd fail2ban-master`
-* run the installer script: `sudo python setup.py install
+* run the installer script: `sudo python setup.py install`
 
 #### Configuration
 
@@ -51,6 +51,10 @@ The following must be added to your /etc/pf.conf file to enable the fail2ban's a
 table <fail2ban> persist
 block drop log quick from <fail2ban> to any
 ```
+
+Reload the settings for PF:
+
+`sudo pfctl -f /etc/pf.conf`
 
 If not already enabled (likely), you'll need to enable PF to start filtering connections:
 
