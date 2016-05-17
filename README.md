@@ -134,6 +134,41 @@ filter   = apache-noscript
 logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log
 ```
 
+#### fail2ban logs
+
+Fail2ban keeps a log file at /var/log/fail2ban. This will list the jail name (the part in brackets in configuration file) and the IP address that triggered the entry.
+
+Here's an example (with IP addresses obfuscated):
+
+```
+$ tail /var/log/fail2ban.log
+2016-05-17 10:29:29,420 fail2ban.filter         [21867]: INFO    [postfix] Found 176.218.x.x
+2016-05-17 10:30:00,468 fail2ban.filter         [21867]: INFO    Log rotation detected for /var/log/mail.log
+2016-05-17 10:32:35,989 fail2ban.filter         [21867]: INFO    [postfix] Found 77.247.x.x
+2016-05-17 10:36:52,351 fail2ban.filter         [21867]: INFO    [postfix] Found 167.0.x.x
+2016-05-17 10:38:20,473 fail2ban.filter         [21867]: INFO    [postfix] Found 91.92.x.x
+2016-05-17 10:38:20,474 fail2ban.filter         [21867]: INFO    [postfix] Found 91.92.x.x
+2016-05-17 10:38:42,528 fail2ban.filter         [21867]: INFO    [postfix] Found 91.92.x.x
+2016-05-17 10:38:42,529 fail2ban.filter         [21867]: INFO    [postfix] Found 91.92.x.x
+2016-05-17 10:38:42,883 fail2ban.actions        [21867]: NOTICE  [postfix] Ban 91.92.x.x
+2016-05-17 10:38:43,533 fail2ban.filter         [21867]: INFO    [postfix] Found 74.63.x.x
+```
+
+#### Listing IPs that have been blocked
+
+```
+sudo pfctl -t fail2ban -T show
+````
+
+This should give some output similar to this (IP addresses obfuscated):
+
+```
+No ALTQ support in kernel
+ALTQ related functions disabled
+   176.218.x.x/32
+   167.0.x.x/32
+   91.92.x.x/32
+```
 
 #### Reference
 
