@@ -26,8 +26,9 @@ Since fail2ban version 0.9x, paths can no longer containg spaces.
 To work around this, run the following command:
 ```
 sudo ln -s "/Library/FileMaker Server/" /Library/FileMakerServer
+```
 
-To enable the filter, you'll need to add something like the following into your jail.local file (which you may need to create):
+Next, to enable the FileMaker filter, you'll need to add something like the following into your jail.local file (which you may need to create):
 
 ```
 [filemaker-client]
@@ -52,11 +53,11 @@ logpath  = /Library/FileMakerServer/Logs/Event.log
 maxretry = 6
 ```
 
-Make sure these values are defined somewhere in your jail.conf file:
+Make sure the following values are defined somewhere in your jail.conf file:
 
 ```
 destemail = notifications@domain.com   # email to receive start, stop, ban, and unban notifications
-hostname = myhostname                  # eg., server, not server.domain.com
+hostname = myhostname                  # e.g., server, not server.domain.com
 banaction = pf
 ```
 
