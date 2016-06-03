@@ -56,12 +56,16 @@ maxretry = 6
 Make sure the following values are defined somewhere in your jail.conf file:
 
 ```
-destemail = notifications@domain.com   # email to receive start, stop, ban, and unban notifications
-hostname = myhostname                  # e.g., server, not server.domain.com
+# email to receive start, stop, ban, and unban notifications
+destemail = notifications@domain.com
+
+# e.g., server, not server.domain.com
+hostname = myhostname
+
 banaction = pf
 ```
 
-The following must be added to your /etc/pf.conf file to enable the fail2ban's ability to block addresses:
+The following must be added to the end of the /etc/pf.conf file to enable the fail2ban's ability to block addresses:
 ```
 table <fail2ban> persist
 block drop log quick from <fail2ban> to any
@@ -73,7 +77,11 @@ Reload the settings for PF:
 
 If not already enabled (likely), you'll need to enable PF to start filtering connections:
 
-`pfctl -e`
+`sudo pfctl -e`
+
+If you used Python's easy_install command to install fail2ban you may need to run the following:
+
+`sudo mkdir /var/run/fail2ban/`
 
 
 #### Yosemite Configuration
