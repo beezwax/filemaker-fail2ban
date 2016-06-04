@@ -79,7 +79,7 @@ If not already enabled (likely), you'll need to enable PF to start filtering con
 
 `sudo pfctl -e`
 
-If you used Python's easy_install command to install fail2ban you may need to run the following:
+If you installed from source you'll need to create the following directory:
 
 `sudo mkdir /var/run/fail2ban/`
 
