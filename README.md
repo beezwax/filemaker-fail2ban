@@ -178,7 +178,7 @@ $ tail /var/log/fail2ban.log
 2016-05-17 10:38:43,533 fail2ban.filter         [21867]: INFO    [postfix] Found 74.63.x.x
 ```
 
-#### Listing IPs that have been blocked
+#### Listing IPs that are currently blocked
 
 ```
 sudo pfctl -t fail2ban -T show
