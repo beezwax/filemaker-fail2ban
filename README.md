@@ -18,7 +18,7 @@ To install from  source, the process is along these lines:
 * unzip the archive: `tar xf master`
 * `cd fail2ban-master`
 * run the installer script: `sudo python setup.py install`
-* `sudo mkdir /var/run/fail2ban/`
+* create the run directory: `sudo mkdir /var/run/fail2ban/`
 
 
 #### Configuration
@@ -55,14 +55,14 @@ logpath  = /Library/FileMakerServer/Logs/Event.log
 maxretry = 6
 ```
 
-Make sure the following values are defined somewhere in your jail.conf file:
+Make sure the following values are defined in the [DEFAULT] section of the jail.conf file or at beginning of jail.local:
 
 ```
 # email to receive start, stop, ban, and unban notifications
 destemail = notifications@domain.com
 
-# e.g., server, not server.domain.com
-hostname = myhostname
+# This is servername, not servername.domain.com
+hostname = `hostname -s`
 
 banaction = pf
 ```

@@ -2,16 +2,16 @@
 #
 # This is an example of what your jail.local file might look like.
 
-# THESE VALUES SHOULD BE DEFINED HERE OR IN JAIL.CONF:
-#    hostname: the network host name to use
+# THESE VALUES SHOULD BE DEFINED HERE OR IN THE [DEFAULT] SECTION OF JAIL.CONF:
+#    hostname: the network host name to use, "banaction = `hostname -s`" should work
 #    destemail: email address to send notification emails to
-
+#    banaction: pf
 
 [filemaker-client]
 
 enabled  = true
 filter   = filemaker-client
-logpath  = /Library/FileMaker Server/Logs/Event.log
+logpath  = /Library/FileMakerServer/Logs/Event.log
 action   = pf[name=filemaker-client, port="5003,16001,http,https"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s, logpath=%(logpath)s]
 maxretry = 6
@@ -52,7 +52,7 @@ maxretry = 4
 
 enabled  = true
 filter   = apache-badbots
-logpath  = /Library/FileMaker Server/HTTPServer/logs/access_log.*
+logpath  = /Library/FileMakerServer/HTTPServer/logs/access_log.*
 action   = pf[name=apache-badbots, port="http,https"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 maxretry = 2
@@ -61,7 +61,7 @@ maxretry = 2
 
 enabled  = true
 filter   = apache-badbots
-logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_access_log.*
+logpath  = /Library/FileMakerServer/HTTPServer/logs/ssl_access_log.*
 action   = pf[name=apache-badbots, port="http,https"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 maxretry = 2
@@ -70,7 +70,7 @@ maxretry = 2
 
 enabled  = true
 filter   = apache-badbots
-logpath  = /Library/FileMaker Server/HTTPServer/logs/fmsadminserver_access_log.*
+logpath  = /Library/FileMakerServer/HTTPServer/logs/fmsadminserver_access_log.*
 action   = pf[name=apache-badbots, port="http,https"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 maxretry = 2
@@ -80,7 +80,7 @@ maxretry = 2
 
 enabled  = true
 filter   = apache-auth
-logpath  = /Library/FileMaker Server/HTTPServer/logs/error_log.*
+logpath  = /Library/FileMakerServer/HTTPServer/logs/error_log.*
 action   = pf[name=apache-auth, port="http,https"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 maxretry = 4
@@ -89,7 +89,7 @@ maxretry = 4
 
 enabled  = true
 filter   = apache-auth
-logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log.*
+logpath  = /Library/FileMakerServer/HTTPServer/logs/ssl_error_log.*
 action   = pf[name=apache-auth, port="http,https"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 maxretry = 4
@@ -101,7 +101,7 @@ enabled  = true
 action   = pf[name=apache-noscript, port="http,https,16000"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 filter   = apache-noscript
-logpath  = /Library/FileMaker Server/HTTPServer/logs/error_log.*
+logpath  = /Library/FileMakerServer/HTTPServer/logs/error_log.*
 
 [apache-noscript-2]
 
@@ -109,4 +109,4 @@ enabled  = true
 action   = pf[name=apache-noscript, port="http,https,16000"]
            sendmail-whois[name=%(hostname)s, dest=%(destemail)s, sender=%(hostname)s]
 filter   = apache-noscript
-logpath  = /Library/FileMaker Server/HTTPServer/logs/ssl_error_log.*
+logpath  = /Library/FileMakerServer/HTTPServer/logs/ssl_error_log.*
