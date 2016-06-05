@@ -18,6 +18,8 @@ To install from  source, the process is along these lines:
 * unzip the archive: `tar xf master`
 * `cd fail2ban-master`
 * run the installer script: `sudo python setup.py install`
+* `sudo mkdir /var/run/fail2ban/`
+
 
 #### Configuration
 
@@ -78,10 +80,6 @@ Reload the settings for PF:
 If not already enabled (likely), you'll need to enable PF to start filtering connections:
 
 `sudo pfctl -e`
-
-If you installed from source you'll need to create the following directory:
-
-`sudo mkdir /var/run/fail2ban/`
 
 
 #### Yosemite Configuration
