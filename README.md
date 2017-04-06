@@ -18,8 +18,28 @@ To install from  source, the process is along these lines:
 * unzip the archive: `tar xf master`
 * `cd fail2ban-master`
 * run the installer script: `sudo python setup.py install`
-* create the run directory: `sudo mkdir /var/run/fail2ban/`
-
+* create the run directory (may already be present): `sudo mkdir /var/run/fail2ban/`
+* create the file at /Library/LaunchDaemons/org.fail2ban.plist with content from below:
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>Disabled</key>
+        <false/>
+        <key>Label</key>
+        <string>fail2ban</string>
+        <key>ProgramArguments</key>
+        <array>
+                <string>/usr/local/bin/fail2ban-client</string>
+                <string>start</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+</dict>
+</plist>
+```
+* load the launchctl .plist: `sudo launchctl load -w /Library/LaunchDaemons/org.fail2ban.plist`
 
 #### Configuration
 
@@ -81,10 +101,41 @@ If not already enabled (likely), you'll need to enable PF to start filtering con
 
 `sudo pfctl -e`
 
+Create a script at /etc/periodic/800.fail2ban-rotate-log to rotate log file in case it starts getting big:
 
-#### Yosemite Configuration
+```
+#!/bin/sh
 
-If using 10.10, we can make an additional improvement. This however requires making a change to how FileMaker Server writes out the web server logs. Follow the directions at https://blog.beezwax.net/2015/06/30/keep-filemaker-server-web-logs-at-fixed-paths/ for details.
+# 2017-04-06 simon_b: created file
+
+logPath="/var/log/fail2ban.log"
+macPortsFail2ban="/opt/local/bin/fail2ban-client"
+
+apache_version=$(/usr/sbin/httpd -version | head -1 | cut -d "/" -f 2 | cut -d "." -f 1,2)
+
+if [ "$apache_version" == "2.2" ]; then
+   # Older systems can use newsyslog, but this will rotate log file regardless of size.
+   /usr/sbin/newsyslog -F "$logPath"
+else
+   # Rotate out the log if bigger than 40 MB, keeping current log at same file name. Requires Apache 2.4+ (Yosemite or better).
+   /usr/sbin/rotatelogs -L "$logPath" 40M
+fi
+
+if [ -s ${macPortsFail2ban} ]; then
+   # Using MacPorts:
+   "$macPortsFail2ban" set logtarget "$logPath" >/dev/null
+else
+   # Make fail2ban start using the new log file.
+   /usr/local/bin/fail2ban-client set logtarget "$logPath" >/dev/null
+fi
+```
+
+Use `sudo chmod ug+x /etc/periodic/800.fail2ban-rotate-log` to make the script executable.
+
+
+#### Yosemite+ Configuration
+
+If using 10.10 or better, we can make an additional improvement. This however requires making a change to how FileMaker Server writes out the web server logs. Follow the directions at https://blog.beezwax.net/2015/06/30/keep-filemaker-server-web-logs-at-fixed-paths/ for details.
 
 Once done, add the following to your jail.local file:
 
